@@ -1,0 +1,523 @@
+/* ============================================
+   FOTOAMIGOS - Trading Card Style
+   Inspired by Cromy "Super Heroes" 1985
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;700;900&display=swap');
+
+:root {
+  --card-cream: #f5f0e1;
+  --card-cream-dark: #e8dfc9;
+  --ink-blue: #2a4a8a;
+  --ink-blue-light: #3d6bc4;
+  --accent-yellow: #f5a623;
+  --accent-red: #d44040;
+  --accent-green: #3a9e5c;
+  --text-dark: #1a1a1a;
+  --text-muted: #555;
+  --card-width: 220px;
+  --card-height: 320px;
+  --card-radius: 12px;
+  --transition-flip: 0.6s;
+  --transition-card: 0.2s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #1a1a2e;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---- HEADER ---- */
+.header {
+  text-align: center;
+  padding: 32px 16px 16px;
+}
+
+.header h1 {
+  font-family: 'Bangers', cursive;
+  font-size: 3.5rem;
+  letter-spacing: 4px;
+  color: var(--accent-yellow);
+  text-shadow: 3px 3px 0 var(--accent-red), 6px 6px 0 rgba(0,0,0,0.3);
+  text-transform: uppercase;
+}
+
+.header .subtitle {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85rem;
+  margin-top: 4px;
+  letter-spacing: 2px;
+}
+
+/* ---- BACK BUTTON ---- */
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: var(--ink-blue);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: 'Bangers', cursive;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+.back-btn:hover {
+  background: var(--ink-blue-light);
+  transform: translateX(0) scale(1.05);
+}
+
+.back-btn.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ---- SCREEN TITLE ---- */
+.screen-title {
+  text-align: center;
+  padding: 8px 16px 24px;
+  color: white;
+  font-family: 'Bangers', cursive;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.screen-title.visible {
+  opacity: 1;
+}
+
+/* ---- CARDS GRID ---- */
+.cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 16px 24px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ---- CARD ---- */
+.card-container {
+  perspective: 1000px;
+  width: var(--card-width);
+  height: var(--card-height);
+  cursor: pointer;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--transition-flip);
+  transform-style: preserve-3d;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-container:hover .card:not(.flipped) {
+  transform: rotateY(8deg) scale(1.03);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: 3px 3px 12px rgba(0,0,0,0.4);
+}
+
+/* ---- CARD BACK ---- */
+.card-back {
+  background: var(--card-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--ink-blue);
+}
+
+.card-back-pattern {
+  width: 100%;
+  height: 100%;
+  background-color: var(--card-cream);
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 24px,
+      rgba(42, 74, 138, 0.07) 24px,
+      rgba(42, 74, 138, 0.07) 25px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 24px,
+      rgba(42, 74, 138, 0.07) 24px,
+      rgba(42, 74, 138, 0.07) 25px
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back-emblem {
+  width: 120px;
+  height: 120px;
+  border: 4px solid var(--ink-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-cream);
+  position: relative;
+}
+
+.card-back-emblem::before {
+  content: "FOTO\nAMIGOS";
+  font-family: 'Bangers', cursive;
+  font-size: 1.3rem;
+  color: var(--ink-blue);
+  text-align: center;
+  line-height: 1.2;
+  letter-spacing: 2px;
+}
+
+/* Diagonal text watermark */
+.card-back-watermark {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.card-back-watermark span {
+  position: absolute;
+  font-family: 'Bangers', cursive;
+  font-size: 0.65rem;
+  color: rgba(42, 74, 138, 0.12);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* ---- CARD FRONT ---- */
+.card-front {
+  background: var(--card-cream);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  border: 3px solid var(--ink-blue);
+}
+
+.card-photo {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #ddd 25%, #ccc 25%, #ccc 50%, #ddd 50%, #ddd 75%, #ccc 75%);
+  background-size: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 2px solid var(--ink-blue);
+}
+
+.card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-photo .placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.card-name {
+  background: var(--ink-blue);
+  color: white;
+  text-align: center;
+  padding: 6px 8px;
+  font-family: 'Bangers', cursive;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.card-attrs {
+  flex: 1;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.card-attr-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 0.65rem;
+  line-height: 1.3;
+}
+
+.card-attr-label {
+  font-weight: 900;
+  color: var(--ink-blue);
+  min-width: 65px;
+  flex-shrink: 0;
+  font-size: 0.55rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.card-attr-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.card-attr-value {
+  color: var(--text-dark);
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.card-attr-value:hover {
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.card-attr-value.comma {
+  cursor: default;
+  padding: 0;
+  color: var(--text-muted);
+}
+
+.card-attr-value.comma:hover {
+  background: none;
+  font-weight: normal;
+}
+
+/* ---- ATTRIBUTE SCREEN ---- */
+.attribute-screen {
+  display: none;
+}
+
+.attribute-screen.active {
+  display: block;
+}
+
+.attribute-screen .screen-title {
+  color: var(--accent-yellow);
+}
+
+.attribute-screen .screen-title .attr-label {
+  color: white;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-left: 8px;
+}
+
+/* ---- MINI CARDS (attribute screen) ---- */
+.mini-cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 24px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.mini-card {
+  width: var(--card-width);
+  background: var(--card-cream);
+  border-radius: var(--card-radius);
+  border: 3px solid var(--ink-blue);
+  overflow: hidden;
+  box-shadow: 3px 3px 12px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.mini-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.mini-card-photo {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #ddd 25%, #ccc 25%, #ccc 50%, #ddd 50%, #ddd 75%, #ccc 75%);
+  background-size: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 2px solid var(--ink-blue);
+}
+
+.mini-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mini-card-photo .placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.mini-card-name {
+  background: var(--ink-blue);
+  color: white;
+  text-align: center;
+  padding: 6px 8px;
+  font-family: 'Bangers', cursive;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.mini-card-attrs {
+  padding: 8px 10px;
+}
+
+.mini-card-attr-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 0.65rem;
+  line-height: 1.5;
+}
+
+.mini-card-attr-label {
+  font-weight: 900;
+  color: var(--ink-blue);
+  min-width: 65px;
+  flex-shrink: 0;
+  font-size: 0.55rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.mini-card-attr-value {
+  color: var(--text-dark);
+}
+
+.mini-card-attr-value.highlight {
+  background: var(--accent-yellow);
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ---- SHARED BADGE ---- */
+.shared-badge {
+  display: inline-block;
+  background: var(--accent-green);
+  color: white;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* ---- ANIMATIONS ---- */
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-container {
+  animation: cardAppear 0.5s ease forwards;
+  opacity: 0;
+}
+
+.card-container:nth-child(1) { animation-delay: 0.05s; }
+.card-container:nth-child(2) { animation-delay: 0.1s; }
+.card-container:nth-child(3) { animation-delay: 0.15s; }
+.card-container:nth-child(4) { animation-delay: 0.2s; }
+.card-container:nth-child(5) { animation-delay: 0.25s; }
+.card-container:nth-child(6) { animation-delay: 0.3s; }
+.card-container:nth-child(7) { animation-delay: 0.35s; }
+.card-container:nth-child(8) { animation-delay: 0.4s; }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 600px) {
+  :root {
+    --card-width: 160px;
+    --card-height: 240px;
+  }
+
+  .header h1 {
+    font-size: 2.5rem;
+  }
+
+  .card-photo, .mini-card-photo {
+    height: 100px;
+  }
+
+  .card-name, .mini-card-name {
+    font-size: 0.9rem;
+  }
+
+  .card-attr-row, .mini-card-attr-row {
+    font-size: 0.55rem;
+  }
+
+  .card-attr-label, .mini-card-attr-label {
+    font-size: 0.48rem;
+    min-width: 50px;
+  }
+
+  .cards-grid, .mini-cards-grid {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .card-back-emblem {
+    width: 80px;
+    height: 80px;
+  }
+
+  .card-back-emblem::before {
+    font-size: 0.9rem;
+  }
+}
