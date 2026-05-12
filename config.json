@@ -1,0 +1,108 @@
+{
+  "superheroes": [
+    {
+      "id": "ayelen",
+      "nombre": "AYELÉN",
+      "camara": "canon",
+      "comidas": ["Milanesa con puré"],
+      "poder_especial": ["Puesta en Escena"],
+      "lente": ["35 mm"],
+      "tipo": ["Documental"],
+      "referentes": ["Vivian Maier"],
+      "fotos": [],
+      "avatar": ""
+    },
+    {
+      "id": "julian_mrs",
+      "nombre": "JULIÁN MRS",
+      "camara": "nikon",
+      "comidas": ["Milanesa con papas fritas"],
+      "poder_especial": ["Momento Justo"],
+      "lente": ["600 mm"],
+      "tipo": ["Naturaleza"],
+      "referentes": ["Robert Capa"],
+      "fotos": [],
+      "avatar": ""
+    },
+    {
+      "id": "julian_mdn",
+      "nombre": "JULIÁN MDN",
+      "camara": "sony",
+      "comidas": ["Milanesa con papas fritas"],
+      "poder_especial": ["Metáfora Visual"],
+      "lente": ["Gran Angular"],
+      "tipo": ["Paisaje"],
+      "referentes": ["Henri Cartier-Bresson"],
+      "fotos": [],
+      "avatar": ""
+    },
+    {
+      "id": "tutino",
+      "nombre": "TUTINO",
+      "camara": "sony",
+      "comidas": ["Ratatouille"],
+      "poder_especial": ["Narrativa Visual"],
+      "lente": ["50 mm"],
+      "tipo": ["Street photography"],
+      "referentes": ["Antoine D'agata"],
+      "fotos": [],
+      "avatar": ""
+    },
+    {
+      "id": "zeca",
+      "nombre": "ZECA",
+      "camara": "canon",
+      "comidas": ["Fideos"],
+      "poder_especial": ["Puesta en Escena"],
+      "lente": ["50 mm"],
+      "tipo": ["Retrato"],
+      "referentes": ["Annie Leibovitz"],
+      "fotos": [],
+      "avatar": ""
+    },
+    {
+      "id": "vale",
+      "nombre": "VALE",
+      "camara": "leica",
+      "comidas": ["Sanguches de miga", "Empanadas"],
+      "poder_especial": ["Metáfora Visual"],
+      "lente": ["24-70 mm"],
+      "tipo": ["Conceptual"],
+      "referentes": ["Saul Leiter"],
+      "fotos": [],
+      "avatar": ""
+    },
+    {
+      "id": "martin",
+      "nombre": "MARTÍN",
+      "camara": "nikon",
+      "comidas": ["Asado"],
+      "poder_especial": ["Metáfora Visual"],
+      "lente": ["24-70 mm"],
+      "tipo": ["Fine Art"],
+      "referentes": ["Daido Moriyama"],
+      "fotos": [],
+      "avatar": ""
+    },
+    {
+      "id": "carmela",
+      "nombre": "CARMELA",
+      "camara": "canon",
+      "comidas": ["Fideos", "Atún", "Milanesa"],
+      "poder_especial": ["Instante Decisivo"],
+      "lente": ["50 mm"],
+      "tipo": ["Street photography"],
+      "referentes": ["Sebastian Salgado"],
+      "fotos": [],
+      "avatar": ""
+    }
+  ],
+  "atributos": [
+    { "key": "camara",         "label": "CÁMARA",         "icon": "photo_camera",  "color": "#0058be", "containerColor": "#2170e4", "onContainerColor": "#fefcff" },
+    { "key": "comidas",        "label": "COMIDAS",        "icon": "restaurant",    "color": "#735c00", "containerColor": "#da3437", "onContainerColor": "#fffbff" },
+    { "key": "poder_especial", "label": "PODER ESPECIAL", "icon": "auto_fix_high",  "color": "#735c00", "containerColor": "#cea700", "onContainerColor": "#4e3e00" },
+    { "key": "lente",          "label": "LENTE",          "icon": "lens_blur",     "color": "#5b403e", "containerColor": "#e4beba", "onContainerColor": "#5b403e" },
+    { "key": "tipo",           "label": "TIPO",           "icon": "category",      "color": "#2170e4", "containerColor": "#d8e2ff", "onContainerColor": "#001a42" },
+    { "key": "referentes",    "label": "REFERENTES",     "icon": "person_apron",  "color": "#8f6f6d", "containerColor": "#e5e2e1", "onContainerColor": "#1c1b1b" }
+  ]
+}

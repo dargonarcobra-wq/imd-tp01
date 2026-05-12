@@ -3,318 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FOTOAMIGOS</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <title>FOTOAMIGOS: THE GAME!</title>
 
-  <div class="header">
-    <h1 id="pageTitle">FOTOAMIGOS</h1>
-    <div class="subtitle">Hipertexto e Interfaz — IMD 2025</div>
-  </div>
-
-  <div class="screen-title" id="screenTitle"></div>
-
-  <button class="back-btn" id="backBtn" onclick="showMainScreen()">← VOLVER</button>
-
-  <!-- MAIN SCREEN: 8 cards face down -->
-  <div class="cards-grid" id="mainScreen"></div>
-
-  <!-- ATTRIBUTE SCREEN: filtered mini cards -->
-  <div class="attribute-screen" id="attrScreen">
-    <div class="mini-cards-grid" id="attrCards"></div>
-  </div>
-
-  <script src="data.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // ---- STATE ----
-    let flippedCards = new Set();
-
-    // ---- BUILD WATERMARK TEXT for card backs ----
-    function buildWatermark() {
-      const container = document.createElement('div');
-      container.className = 'card-back-watermark';
-      const text = 'FOTOAMIGOS';
-      let idx = 0;
-      for (let row = 0; row < 8; row++) {
-        for (let col = 0; col < 5; col++) {
-          const span = document.createElement('span');
-          span.textContent = text;
-          span.style.left = (col * 55 - 20 + row * 15) + 'px';
-          span.style.top = (row * 42 - 10) + 'px';
-          span.style.transform = 'rotate(-45deg)';
-          container.appendChild(span);
-          idx++;
-        }
-      }
-      return container;
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'surface': '#fcf9f8',
+            'surface-dim': '#dcd9d9',
+            'surface-container': '#f0eded',
+            'surface-container-low': '#f6f3f2',
+            'surface-container-lowest': '#ffffff',
+            'surface-container-high': '#eae7e7',
+            'surface-container-highest': '#e5e2e1',
+            'on-background': '#1c1b1b',
+            'on-surface': '#1c1b1b',
+            'on-surface-variant': '#5b403e',
+            'primary': '#b61722',
+            'on-primary': '#ffffff',
+            'primary-container': '#da3437',
+            'on-primary-container': '#fffbff',
+            'secondary': '#0058be',
+            'on-secondary': '#ffffff',
+            'secondary-container': '#2170e4',
+            'on-secondary-container': '#fefcff',
+            'tertiary': '#735c00',
+            'on-tertiary': '#ffffff',
+            'tertiary-container': '#cea700',
+            'on-tertiary-container': '#4e3e00',
+            'tertiary-fixed': '#ffe083',
+            'tertiary-fixed-dim': '#eec200',
+            'on-tertiary-fixed': '#231b00',
+            'on-tertiary-fixed-variant': '#574500',
+            'inverse-surface': '#313030',
+            'inverse-on-surface': '#f3f0ef',
+            'outline': '#8f6f6d',
+            'outline-variant': '#e4beba',
+            'error': '#ba1a1a',
+          },
+          fontFamily: {
+            'card-title': ['Lexend', 'sans-serif'],
+            'stat-value': ['Space Grotesk', 'sans-serif'],
+            'stat-label': ['Space Grotesk', 'sans-serif'],
+            'body-md': ['Lexend', 'sans-serif'],
+            'button-text': ['Lexend', 'sans-serif'],
+          },
+          fontSize: {
+            'card-title': ['24px', { lineHeight: '28px', letterSpacing: '-0.02em', fontWeight: '900' }],
+            'stat-value': ['20px', { lineHeight: '24px', fontWeight: '700' }],
+            'stat-label': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+            'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+            'button-text': ['18px', { lineHeight: '24px', fontWeight: '800' }],
+          },
+          borderRadius: {
+            DEFAULT: '0.25rem',
+            lg: '0.5rem',
+            xl: '0.75rem',
+            '2xl': '1rem',
+            '3xl': '1.5rem',
+            full: '9999px',
+          },
+          spacing: {
+            'unit': '4px',
+            'card-padding': '16px',
+            'gutter': '12px',
+            'stack-gap': '8px',
+            'section-margin': '32px',
+          },
+        },
+      },
     }
-
-    // ---- BUILD CARD BACK ----
-    function buildCardBack() {
-      const back = document.createElement('div');
-      back.className = 'card-face card-back';
-
-      const pattern = document.createElement('div');
-      pattern.className = 'card-back-pattern';
-
-      const emblem = document.createElement('div');
-      emblem.className = 'card-back-emblem';
-
-      pattern.appendChild(emblem);
-      pattern.appendChild(buildWatermark());
-      back.appendChild(pattern);
-      return back;
-    }
-
-    // ---- FORMAT ATTRIBUTE VALUES (clickable) ----
-    function buildAttrValues(compañero, attrKey) {
-      const container = document.createElement('div');
-      container.className = 'card-attr-values';
-
-      const values = compañero[attrKey];
-      values.forEach((val, i) => {
-        if (i > 0) {
-          const comma = document.createElement('span');
-          comma.className = 'card-attr-value comma';
-          comma.textContent = ', ';
-          container.appendChild(comma);
-        }
-        const span = document.createElement('span');
-        span.className = 'card-attr-value';
-        span.textContent = val;
-        span.onclick = (e) => {
-          e.stopPropagation();
-          showAttributeScreen(attrKey, val);
-        };
-        container.appendChild(span);
-      });
-
-      return container;
-    }
-
-    // ---- BUILD CARD FRONT ----
-    function buildCardFront(compañero) {
-      const front = document.createElement('div');
-      front.className = 'card-face card-front';
-
-      // Photo
-      const photo = document.createElement('div');
-      photo.className = 'card-photo';
-      const img = document.createElement('img');
-      img.src = `img/${compañero.nombre.toLowerCase().replace(/\s+/g, '_')}.jpg`;
-      img.alt = compañero.nombre;
-      img.onerror = function() {
-        this.style.display = 'none';
-        const ph = document.createElement('div');
-        ph.className = 'placeholder-icon';
-        ph.textContent = '📷';
-        this.parentElement.appendChild(ph);
-      };
-      photo.appendChild(img);
-      front.appendChild(photo);
-
-      // Name
-      const name = document.createElement('div');
-      name.className = 'card-name';
-      name.textContent = compañero.nombre;
-      front.appendChild(name);
-
-      // Attributes
-      const attrs = document.createElement('div');
-      attrs.className = 'card-attrs';
-
-      ATRIBUTOS.forEach(attr => {
-        const row = document.createElement('div');
-        row.className = 'card-attr-row';
-
-        const label = document.createElement('span');
-        label.className = 'card-attr-label';
-        label.textContent = attr.label;
-        row.appendChild(label);
-
-        row.appendChild(buildAttrValues(compañero, attr.key));
-        attrs.appendChild(row);
-      });
-
-      front.appendChild(attrs);
-      return front;
-    }
-
-    // ---- BUILD MAIN SCREEN ----
-    function buildMainScreen() {
-      const grid = document.getElementById('mainScreen');
-      grid.innerHTML = '';
-
-      COMPANIEROS.forEach((comp, idx) => {
-        const container = document.createElement('div');
-        container.className = 'card-container';
-        container.dataset.index = idx;
-
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.id = `card-${idx}`;
-
-        card.appendChild(buildCardBack());
-        card.appendChild(buildCardFront(comp));
-
-        container.appendChild(card);
-        container.onclick = () => flipCard(idx);
-
-        grid.appendChild(container);
-      });
-    }
-
-    // ---- FLIP CARD ----
-    function flipCard(idx) {
-      const card = document.getElementById(`card-${idx}`);
-      if (card.classList.contains('flipped')) {
-        card.classList.remove('flipped');
-        flippedCards.delete(idx);
-      } else {
-        card.classList.add('flipped');
-        flippedCards.add(idx);
-      }
-    }
-
-    // ---- FIND COMPANIEROS WITH SHARED ATTRIBUTE ----
-    function findCompañerosWithAttr(attrKey, attrValue) {
-      const normalizedVal = attrValue.toLowerCase().trim();
-      return COMPANIEROS.filter(c => 
-        c[attrKey].some(v => v.toLowerCase().trim() === normalizedVal)
-      );
-    }
-
-    // ---- COUNT SHARED ----
-    function countShared(attrKey, attrValue) {
-      return findCompañerosWithAttr(attrKey, attrValue).length;
-    }
-
-    // ---- SHOW ATTRIBUTE SCREEN ----
-    function showAttributeScreen(attrKey, attrValue) {
-      const matched = findCompañerosWithAttr(attrKey, attrValue);
-      const attrLabel = ATRIBUTOS.find(a => a.key === attrKey).label;
-
-      // Update page title
-      document.getElementById('pageTitle').textContent = attrValue.toUpperCase();
-      document.getElementById('screenTitle').innerHTML = 
-        `${attrLabel}<span class="attr-label"> — ${matched.length} compañero${matched.length > 1 ? 's' : ''}</span>`;
-      document.getElementById('screenTitle').classList.add('visible');
-
-      // Show back button
-      document.getElementById('backBtn').classList.add('visible');
-
-      // Hide main, show attr
-      document.getElementById('mainScreen').style.display = 'none';
-      const attrScreen = document.getElementById('attrScreen');
-      attrScreen.classList.add('active');
-
-      // Build mini cards
-      const grid = document.getElementById('attrCards');
-      grid.innerHTML = '';
-
-      matched.forEach((comp, idx) => {
-        const card = document.createElement('div');
-        card.className = 'mini-card';
-        card.style.animation = `cardAppear 0.4s ease forwards`;
-        card.style.animationDelay = `${idx * 0.08}s`;
-        card.style.opacity = '0';
-
-        // Photo
-        const photo = document.createElement('div');
-        photo.className = 'mini-card-photo';
-        const img = document.createElement('img');
-        img.src = `img/${comp.nombre.toLowerCase().replace(/\s+/g, '_')}.jpg`;
-        img.alt = comp.nombre;
-        img.onerror = function() {
-          this.style.display = 'none';
-          const ph = document.createElement('div');
-          ph.className = 'placeholder-icon';
-          ph.textContent = '📷';
-          this.parentElement.appendChild(ph);
-        };
-        photo.appendChild(img);
-        card.appendChild(photo);
-
-        // Name
-        const name = document.createElement('div');
-        name.className = 'mini-card-name';
-        name.textContent = comp.nombre;
-        card.appendChild(name);
-
-        // Attributes
-        const attrs = document.createElement('div');
-        attrs.className = 'mini-card-attrs';
-
-        ATRIBUTOS.forEach(attr => {
-          const row = document.createElement('div');
-          row.className = 'mini-card-attr-row';
-
-          const label = document.createElement('span');
-          label.className = 'mini-card-attr-label';
-          label.textContent = attr.label;
-          row.appendChild(label);
-
-          const valuesDiv = document.createElement('div');
-          valuesDiv.className = 'card-attr-values';
-
-          comp[attr.key].forEach((val, i) => {
-            if (i > 0) {
-              const comma = document.createElement('span');
-              comma.className = 'card-attr-value comma';
-              comma.textContent = ', ';
-              valuesDiv.appendChild(comma);
-            }
-
-            const span = document.createElement('span');
-            span.className = 'mini-card-attr-value';
-            span.textContent = val;
-
-            // Highlight the matching attribute value
-            const isMatch = attr.key === attrKey && val.toLowerCase().trim() === attrValue.toLowerCase().trim();
-            if (isMatch) {
-              span.classList.add('highlight');
-            }
-
-            // Make clickable if others share this value
-            span.style.cursor = 'pointer';
-            span.onclick = (e) => {
-              e.stopPropagation();
-              // If clicking a different attribute value, navigate to it
-              if (attr.key !== attrKey || val.toLowerCase().trim() !== attrValue.toLowerCase().trim()) {
-                showAttributeScreen(attr.key, val);
-              }
-            };
-
-            valuesDiv.appendChild(span);
-          });
-
-          row.appendChild(valuesDiv);
-          attrs.appendChild(row);
-        });
-
-        card.appendChild(attrs);
-        grid.appendChild(card);
-      });
-    }
-
-    // ---- SHOW MAIN SCREEN ----
-    function showMainScreen() {
-      document.getElementById('pageTitle').textContent = 'FOTOAMIGOS';
-      document.getElementById('screenTitle').classList.remove('visible');
-      document.getElementById('backBtn').classList.remove('visible');
-      document.getElementById('mainScreen').style.display = 'flex';
-      document.getElementById('attrScreen').classList.remove('active');
-
-      // Restore flipped state
-      flippedCards.forEach(idx => {
-        const card = document.getElementById(`card-${idx}`);
-        if (card) card.classList.add('flipped');
-      });
-    }
-
-    // ---- INIT ----
-    buildMainScreen();
   </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800;900&family=Space+Grotesk:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-surface text-on-background min-h-screen font-body-md overflow-x-hidden">
+
+  <!-- ========== APP ROOT ========== -->
+  <div id="app">
+
+    <!-- ===== P01: SPLASH ===== -->
+    <div id="screen-splash" class="screen active">
+      <div class="splash-bg">
+        <div class="splash-tapete"></div>
+      </div>
+      <div class="splash-content">
+        <h1 class="splash-title">FOTOAMIGOS</h1>
+        <p class="splash-subtitle">THE GAME!</p>
+        <p class="splash-course">Hipertexto e Interfaz — IMD 2025</p>
+        <button id="btn-start" class="splash-btn">
+          <span class="material-symbols-outlined mr-2" style="font-variation-settings:'FILL' 1,'wght' 700">style</span>
+          EMPEZAR JUEGO!
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== APP SHELL (visible after splash) ===== -->
+    <div id="app-shell" class="hidden">
+
+      <!-- HEADER -->
+      <header id="app-header" class="app-header">
+        <div id="header-left" class="header-left">
+          <button id="btn-back" class="btn-back hidden" aria-label="Volver">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span class="btn-back-text">VOLVER</span>
+          </button>
+        </div>
+        <div id="header-center" class="header-center"></div>
+        <div id="header-right" class="header-right">
+          <a id="logo-link" class="logo-link" href="#" aria-label="Ir a inicio">
+            <span class="material-symbols-outlined logo-icon" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+            <span class="logo-text">FOTOAMIGOS</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main id="main-content">
+
+        <!-- P02: HOME -->
+        <div id="screen-home" class="screen">
+          <div id="home-grid" class="home-grid"></div>
+        </div>
+
+        <!-- P03: ATRIBUTO -->
+        <div id="screen-atributo" class="screen hidden">
+          <div class="atributo-layout">
+            <div id="attr-shared" class="attr-column attr-shared"></div>
+            <div id="attr-unshared" class="attr-column attr-unshared"></div>
+          </div>
+        </div>
+
+        <!-- P04: SUPERHEROE -->
+        <div id="screen-superheroe" class="screen hidden">
+          <div class="superheroe-layout">
+            <div id="hero-details" class="hero-details"></div>
+            <div id="hero-photos" class="hero-photos"></div>
+          </div>
+          <div id="hero-thumbnails" class="hero-thumbnails"></div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ===== EXPANDED CARD OVERLAY ===== -->
+    <div id="overlay" class="overlay hidden" role="dialog" aria-label="Detalle de carta">
+      <div id="overlay-backdrop" class="overlay-backdrop"></div>
+      <div id="overlay-card" class="overlay-card"></div>
+    </div>
+
+  </div>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script src="app.js"></script>
 </body>
 </html>
