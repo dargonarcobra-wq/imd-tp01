@@ -4,16 +4,31 @@
    ============================================ */
 
 // ---- CONFIG & STATE ----
-let CONFIG = null;  // loaded from config.json
+let CONFIG = null;
+
+async function loadConfig() {
+  try {
+    const resp = await fetch('config.json');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    CONFIG = await resp.json();
+    console.log('config.json loaded, heroes:', CONFIG.superheroes.length);
+  } catch (e) {
+    console.warn('fetch config.json failed:', e.message);
+    if (window.__FOTOAMIGOS_CONFIG) {
+      CONFIG = window.__FOTOAMIGOS_CONFIG;
+    } else {
+      console.error('Could not load config.json.');
+    }
+  }
+}
+
 const navStack = []; // navigation stack: [{screen, params}]
 let currentOverlayHero = null;
 let slideshowIndex = 0;
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load config
-  const resp = await fetch('config.json');
-  CONFIG = await resp.json();
+  await loadConfig();
 
   // Wire up splash
   document.getElementById('btn-start').addEventListener('click', () => exitSplash());
@@ -688,7 +703,7 @@ function buildExpandedCardInline(hero) {
 
   // Photo (smaller inline)
   const photo = document.createElement('div');
-  photo.style.aspectRatio = '4/5';
+  photo.style.aspectRatio = '3/2';
   photo.style.borderBottom = '4px solid #1c1b1b';
   photo.style.overflow = 'hidden';
   photo.style.position = 'relative';

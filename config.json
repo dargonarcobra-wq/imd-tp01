@@ -9,8 +9,8 @@
       "lente": ["35 mm"],
       "tipo": ["Documental"],
       "referentes": ["Vivian Maier"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/ayelen/01.jpg", "assets/photos/ayelen/02.jpg", "assets/photos/ayelen/03.jpg", "assets/photos/ayelen/04.jpg", "assets/photos/ayelen/05.jpg"],
+      "avatar": "assets/avatars/ayelen.png"
     },
     {
       "id": "julian_mrs",
@@ -21,8 +21,8 @@
       "lente": ["600 mm"],
       "tipo": ["Naturaleza"],
       "referentes": ["Robert Capa"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/julian_mrs/01.jpg", "assets/photos/julian_mrs/02.jpg", "assets/photos/julian_mrs/03.jpg", "assets/photos/julian_mrs/04.jpg", "assets/photos/julian_mrs/05.jpg"],
+      "avatar": "assets/avatars/julian_mrs.png"
     },
     {
       "id": "julian_mdn",
@@ -33,8 +33,8 @@
       "lente": ["Gran Angular"],
       "tipo": ["Paisaje"],
       "referentes": ["Henri Cartier-Bresson"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/julian_mdn/01.jpg", "assets/photos/julian_mdn/02.jpg", "assets/photos/julian_mdn/03.jpg", "assets/photos/julian_mdn/04.jpg", "assets/photos/julian_mdn/05.jpg"],
+      "avatar": "assets/avatars/julian_mdn.png"
     },
     {
       "id": "tutino",
@@ -45,8 +45,8 @@
       "lente": ["50 mm"],
       "tipo": ["Street photography"],
       "referentes": ["Antoine D'agata"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/tutino/01.jpg", "assets/photos/tutino/02.jpg", "assets/photos/tutino/03.jpg", "assets/photos/tutino/04.jpg", "assets/photos/tutino/05.jpg", "assets/photos/tutino/06.jpg"],
+      "avatar": "assets/avatars/tutino.png"
     },
     {
       "id": "zeca",
@@ -57,8 +57,8 @@
       "lente": ["50 mm"],
       "tipo": ["Retrato"],
       "referentes": ["Annie Leibovitz"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/zeca/01.jpg", "assets/photos/zeca/02.jpg", "assets/photos/zeca/03.jpg", "assets/photos/zeca/04.jpg", "assets/photos/zeca/05.jpg"],
+      "avatar": "assets/avatars/zeca.png"
     },
     {
       "id": "vale",
@@ -69,8 +69,8 @@
       "lente": ["24-70 mm"],
       "tipo": ["Conceptual"],
       "referentes": ["Saul Leiter"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/vale/01.jpg", "assets/photos/vale/02.webp", "assets/photos/vale/03.webp", "assets/photos/vale/04.png", "assets/photos/vale/05.png"],
+      "avatar": "assets/avatars/vale.png"
     },
     {
       "id": "martin",
@@ -81,8 +81,8 @@
       "lente": ["24-70 mm"],
       "tipo": ["Fine Art"],
       "referentes": ["Daido Moriyama"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/martin/01.jpg", "assets/photos/martin/02.jpg", "assets/photos/martin/03.jpg", "assets/photos/martin/04.jpg", "assets/photos/martin/05.jpg", "assets/photos/martin/06.jpg"],
+      "avatar": "assets/avatars/martin.png"
     },
     {
       "id": "carmela",
@@ -93,8 +93,8 @@
       "lente": ["50 mm"],
       "tipo": ["Street photography"],
       "referentes": ["Sebastian Salgado"],
-      "fotos": [],
-      "avatar": ""
+      "fotos": ["assets/photos/carmela/01.webp", "assets/photos/carmela/02.webp", "assets/photos/carmela/03.png", "assets/photos/carmela/04.webp", "assets/photos/carmela/05.png"],
+      "avatar": "assets/avatars/carmela.png"
     }
   ],
   "atributos": [

@@ -719,7 +719,7 @@
 }
 
 .expanded-photo {
-  aspect-ratio: 4/5;
+  aspect-ratio: 3/2;
   border-bottom: 4px solid #1c1b1b;
   overflow: hidden;
   position: relative;
@@ -909,11 +909,13 @@
 .attr-column {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 20px;
+  align-content: flex-start;
 }
 
 .attr-column-title {
+  width: 100%;
   font-family: 'Lexend', sans-serif;
   font-weight: 900;
   font-size: 18px;
@@ -977,7 +979,7 @@
 }
 
 .slideshow-photo {
-  aspect-ratio: 4/5;
+  aspect-ratio: 3/2;
   border: 4px solid #1c1b1b;
   border-radius: 0.75rem;
   overflow: hidden;
