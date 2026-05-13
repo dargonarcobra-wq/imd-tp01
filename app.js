@@ -128,9 +128,13 @@ function renderScreen() {
     headerCenter.innerHTML = '';
   } else if (nav.screen === 'atributo') {
     const attr = CONFIG.atributos.find(a => a.key === nav.params.attrKey);
+    const extUrl = getAttrValueUrl(nav.params.attrKey, nav.params.attrValue);
+    const valueHtml = extUrl
+      ? `<a class="header-attr-value" href="${extUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${nav.params.attrValue.toUpperCase()}<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-left:4px;opacity:0.6;">open_in_new</span></a>`
+      : `<span class="header-attr-value">${nav.params.attrValue.toUpperCase()}</span>`;
     headerCenter.innerHTML = `
       <span class="header-attr-type" style="color:${attr.color}">${attr.label}</span>
-      <span class="header-attr-value">${nav.params.attrValue.toUpperCase()}</span>
+      ${valueHtml}
     `;
   } else if (nav.screen === 'superheroe') {
     const hero = CONFIG.superheroes.find(h => h.id === nav.params.heroId);
@@ -239,10 +243,10 @@ function buildCollapsedFront(hero, contextAttr) {
 
   const cameraBadge = document.createElement('span');
   cameraBadge.className = 'collapsed-camera-badge';
-  cameraBadge.textContent = hero.camara.toUpperCase();
+  cameraBadge.textContent = hero.camara.name.toUpperCase();
   cameraBadge.addEventListener('click', (e) => {
     e.stopPropagation();
-    navigateToAtributo('camara', hero.camara);
+    navigateToAtributo('camara', hero.camara.name);
   });
   header.appendChild(cameraBadge);
 
@@ -321,8 +325,31 @@ function buildCollapsedFront(hero, contextAttr) {
 }
 
 function getHeroAttrValue(hero, attrKey) {
-  if (attrKey === 'camara') return [hero.camara];
-  return hero[attrKey] || [];
+  if (attrKey === 'camara') return [hero.camara.name];
+  const raw = hero[attrKey] || [];
+  // Object attributes: extract .name from each item
+  if (raw.length > 0 && typeof raw[0] === 'object') return raw.map(item => item.name);
+  return raw;
+}
+
+// Find an external URL for a given attribute value (if any hero has one)
+function getAttrValueUrl(attrKey, attrValueName) {
+  const normalizedName = attrValueName.toLowerCase().trim();
+  for (const hero of CONFIG.superheroes) {
+    if (attrKey === 'camara') {
+      if (hero.camara.name.toLowerCase().trim() === normalizedName && hero.camara.url) {
+        return hero.camara.url;
+      }
+    } else {
+      const items = hero[attrKey] || [];
+      for (const item of items) {
+        if (typeof item === 'object' && item.name.toLowerCase().trim() === normalizedName && item.url) {
+          return item.url;
+        }
+      }
+    }
+  }
+  return null;
 }
 
 // ============================================
@@ -375,11 +402,11 @@ function buildExpandedCard(hero) {
 
   const cameraBadge = document.createElement('span');
   cameraBadge.className = 'expanded-camera-badge';
-  cameraBadge.textContent = hero.camara.toUpperCase();
+  cameraBadge.textContent = hero.camara.name.toUpperCase();
   cameraBadge.addEventListener('click', (e) => {
     e.stopPropagation();
     closeOverlay();
-    setTimeout(() => navigateToAtributo('camara', hero.camara), 250);
+    setTimeout(() => navigateToAtributo('camara', hero.camara.name), 250);
   });
   header.appendChild(cameraBadge);
 
@@ -517,23 +544,6 @@ function renderAtributo() {
   sharedCol.innerHTML = '';
   unsharedCol.innerHTML = '';
 
-  // Column titles
-  const sharedTitle = document.createElement('div');
-  sharedTitle.className = 'attr-column-title';
-  sharedTitle.innerHTML = `
-    <span class="material-symbols-outlined filled" style="color:${attr.color};font-size:20px">${attr.icon}</span>
-    COMPARTEN
-  `;
-  sharedCol.appendChild(sharedTitle);
-
-  const unsharedTitle = document.createElement('div');
-  unsharedTitle.className = 'attr-column-title';
-  unsharedTitle.innerHTML = `
-    <span class="material-symbols-outlined" style="color:#8f6f6d;font-size:20px">block</span>
-    NO COMPARTEN
-  `;
-  unsharedCol.appendChild(unsharedTitle);
-
   // Classify heroes
   const shared = [];
   const unshared = [];
@@ -546,16 +556,33 @@ function renderAtributo() {
     }
   });
 
+  // Column titles
+  const sharedTitle = document.createElement('div');
+  sharedTitle.className = 'attr-column-title';
+  sharedTitle.innerHTML = `
+    <span class="material-symbols-outlined filled" style="color:${attr.color};font-size:20px">${attr.icon}</span>
+    ALIADOS (${shared.length})
+  `;
+  sharedCol.appendChild(sharedTitle);
+
+  const unsharedTitle = document.createElement('div');
+  unsharedTitle.className = 'attr-column-title';
+  unsharedTitle.innerHTML = `
+    <span class="material-symbols-outlined" style="color:#8f6f6d;font-size:20px">block</span>
+    RIVALES (${unshared.length})
+  `;
+  unsharedCol.appendChild(unsharedTitle);
+
   // Render shared cards
   shared.forEach((hero, idx) => {
     const card = buildCollapsedCardForAttr(hero, attr, idx);
     sharedCol.appendChild(card);
   });
 
-  // Render unshared cards
+  // Render unshared (rival) cards — negative reveal style
   unshared.forEach((hero, idx) => {
     const card = buildCollapsedCardForAttr(hero, attr, idx);
-    card.style.opacity = '0.4';
+    card.style.filter = 'invert(100%)';
     unsharedCol.appendChild(card);
   });
 }
@@ -591,22 +618,24 @@ function heroMatchesAttr(hero, attrKey, attrValue) {
   const normalizedTarget = attrValue.toLowerCase().trim();
 
   if (attrKey === 'camara') {
-    return hero.camara.toLowerCase().trim() === normalizedTarget;
+    return hero.camara.name.toLowerCase().trim() === normalizedTarget;
   }
 
   if (attrKey === 'comidas') {
-    // Special matching: extract base keyword
-    const base = extractComidaBase(normalizedTarget);
     const heroComidas = hero.comidas || [];
     return heroComidas.some(c => {
-      const heroBase = extractComidaBase(c.toLowerCase().trim());
-      return heroBase === base || c.toLowerCase().trim().includes(base);
+      const name = typeof c === 'object' ? c.name : c;
+      const heroBase = extractComidaBase(name.toLowerCase().trim());
+      return heroBase === extractComidaBase(normalizedTarget) || name.toLowerCase().trim().includes(extractComidaBase(normalizedTarget));
     });
   }
 
-  // General array match
+  // General array match — handle both object and string items
   const values = hero[attrKey] || [];
-  return values.some(v => v.toLowerCase().trim() === normalizedTarget);
+  return values.some(v => {
+    const name = typeof v === 'object' ? v.name : v;
+    return name.toLowerCase().trim() === normalizedTarget;
+  });
 }
 
 function extractComidaBase(value) {
@@ -695,8 +724,8 @@ function buildExpandedCardInline(hero) {
 
   const cameraBadge = document.createElement('span');
   cameraBadge.className = 'expanded-camera-badge';
-  cameraBadge.textContent = hero.camara.toUpperCase();
-  cameraBadge.addEventListener('click', () => navigateToAtributo('camara', hero.camara));
+  cameraBadge.textContent = hero.camara.name.toUpperCase();
+  cameraBadge.addEventListener('click', () => navigateToAtributo('camara', hero.camara.name));
   header.appendChild(cameraBadge);
 
   card.appendChild(header);
