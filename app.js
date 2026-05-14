@@ -28,7 +28,7 @@ let slideshowIndex = 0;
 
 // ---- AVATAR HELPER ----
 function getAvatarUrl(heroId, aspect) {
-  return `assets/avatars/${aspect}/${heroId}.png`;
+  return `assets/avatars/${aspect}/${heroId}.webp`;
 }
 
 // ---- INIT ----
