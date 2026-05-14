@@ -26,6 +26,11 @@ const navStack = []; // navigation stack: [{screen, params}]
 let currentOverlayHero = null;
 let slideshowIndex = 0;
 
+// ---- AVATAR HELPER ----
+function getAvatarUrl(heroId, aspect) {
+  return `assets/avatars/${aspect}/${heroId}.png`;
+}
+
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', async () => {
   await loadConfig();
@@ -255,9 +260,9 @@ function buildCollapsedFront(hero, contextAttr) {
   // Photo
   const photo = document.createElement('div');
   photo.className = 'collapsed-photo';
-  if (hero.avatar) {
+  if (hero.id) {
     const img = document.createElement('img');
-    img.src = hero.avatar;
+    img.src = getAvatarUrl(hero.id, 'aspect_1_1');
     img.alt = hero.nombre;
     photo.appendChild(img);
     const ht = document.createElement('div');
@@ -415,9 +420,9 @@ function buildExpandedCard(hero) {
   // Photo
   const photo = document.createElement('div');
   photo.className = 'expanded-photo';
-  if (hero.avatar) {
+  if (hero.id) {
     const img = document.createElement('img');
-    img.src = hero.avatar;
+    img.src = getAvatarUrl(hero.id, 'aspect_3_2');
     img.alt = hero.nombre;
     photo.appendChild(img);
     const ht = document.createElement('div');
@@ -697,8 +702,8 @@ function renderSuperheroe() {
 
     const imgDiv = document.createElement('div');
     imgDiv.className = 'hero-thumb-img';
-    if (other.avatar) {
-      imgDiv.innerHTML = `<img src="${other.avatar}" alt="${other.nombre}" style="width:100%;height:100%;object-fit:cover;">`;
+    if (other.id) {
+      imgDiv.innerHTML = `<img src="${getAvatarUrl(other.id, 'aspect_1_1')}" alt="${other.nombre}" style="width:100%;height:100%;object-fit:cover;">`;
     } else {
       imgDiv.innerHTML = '<span class="material-symbols-outlined">person</span>';
     }
@@ -746,8 +751,8 @@ function buildExpandedCardInline(hero) {
   photo.style.borderBottom = '4px solid #1c1b1b';
   photo.style.overflow = 'hidden';
   photo.style.position = 'relative';
-  if (hero.avatar) {
-    photo.innerHTML = `<img src="${hero.avatar}" alt="${hero.nombre}" style="width:100%;height:100%;object-fit:cover;object-position: top;"><div class="halftone" style="position:absolute;inset:0;pointer-events:none"></div>`;
+  if (hero.id) {
+    photo.innerHTML = `<img src="${getAvatarUrl(hero.id, 'aspect_3_2')}" alt="${hero.nombre}" style="width:100%;height:100%;object-fit:cover;object-position: top;"><div class="halftone" style="position:absolute;inset:0;pointer-events:none"></div>`;
   } else {
     photo.innerHTML = `
       <div class="expanded-photo-placeholder">
