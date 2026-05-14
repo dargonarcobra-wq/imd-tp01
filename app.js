@@ -573,18 +573,28 @@ function renderAtributo() {
   `;
   unsharedCol.appendChild(unsharedTitle);
 
+  // Cards containers
+  const sharedCards = document.createElement('div');
+  sharedCards.className = 'attr-column-cards';
+
+  const unsharedCards = document.createElement('div');
+  unsharedCards.className = 'attr-column-cards';
+
   // Render shared cards
   shared.forEach((hero, idx) => {
     const card = buildCollapsedCardForAttr(hero, attr, idx);
-    sharedCol.appendChild(card);
+    sharedCards.appendChild(card);
   });
 
   // Render unshared (rival) cards — negative reveal style
   unshared.forEach((hero, idx) => {
     const card = buildCollapsedCardForAttr(hero, attr, idx);
     card.style.filter = 'invert(100%)';
-    unsharedCol.appendChild(card);
+    unsharedCards.appendChild(card);
   });
+
+  sharedCol.appendChild(sharedCards);
+  unsharedCol.appendChild(unsharedCards);
 }
 
 function buildCollapsedCardForAttr(hero, contextAttr, idx) {
@@ -688,7 +698,7 @@ function renderSuperheroe() {
     const imgDiv = document.createElement('div');
     imgDiv.className = 'hero-thumb-img';
     if (other.avatar) {
-      imgDiv.innerHTML = `<img src="${other.avatar}" alt="${other.nombre}" style="width:100%;height:100%;object-fit:cover">`;
+      imgDiv.innerHTML = `<img src="${other.avatar}" alt="${other.nombre}" style="width:100%;height:100%;object-fit:cover;">`;
     } else {
       imgDiv.innerHTML = '<span class="material-symbols-outlined">person</span>';
     }
@@ -737,7 +747,7 @@ function buildExpandedCardInline(hero) {
   photo.style.overflow = 'hidden';
   photo.style.position = 'relative';
   if (hero.avatar) {
-    photo.innerHTML = `<img src="${hero.avatar}" alt="${hero.nombre}" style="width:100%;height:100%;object-fit:cover"><div class="halftone" style="position:absolute;inset:0;pointer-events:none"></div>`;
+    photo.innerHTML = `<img src="${hero.avatar}" alt="${hero.nombre}" style="width:100%;height:100%;object-fit:cover;object-position: top;"><div class="halftone" style="position:absolute;inset:0;pointer-events:none"></div>`;
   } else {
     photo.innerHTML = `
       <div class="expanded-photo-placeholder">
@@ -906,7 +916,7 @@ function renderSlideshowPhoto(hero) {
 
   const url = hero.fotos[slideshowIndex];
   photoWrapper.innerHTML = `
-    <img src="${url}" alt="${hero.nombre} - foto ${slideshowIndex + 1}" style="width:100%;height:100%;object-fit:cover">
+    <img src="${url}" alt="${hero.nombre} - foto ${slideshowIndex + 1}" style="width:100%;height:100%;object-fit:cover;">
     <div class="halftone" style="position:absolute;inset:0;z-index:1;pointer-events:none"></div>
   `;
 

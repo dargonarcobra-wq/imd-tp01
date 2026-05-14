@@ -82,18 +82,39 @@
 }
 
 .splash-bg {
-  position: absolute;
+  /*position: absolute;
   inset: 0;
   background: url('assets/mesa.png') center/cover no-repeat;
+  animation: splashBgFadeIn 0.5s ease forwards;*/
+
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 50%, #1a5c2a 0%, #0d3318 60%, #061509 100%);
+  overflow: hidden;
+/*  position: fixed;*/
   animation: splashBgFadeIn 0.5s ease forwards;
 }
 
 .splash-tapete {
-  position: absolute;
+  /*position: absolute;
   inset: 0;
   background: url('assets/tapete.png') center/contain no-repeat;
   mix-blend-mode: multiply;
-  opacity: 0.85;
+  opacity: 0.85;*/
+
+  position: absolute;
+    width: 50vw;
+    height: 60vh;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(30, 100, 50, 0.5) 0%, transparent 70%);
+    border: 6px solid rgba(180, 150, 80, 0.3);
+    pointer-events: none;
+    /*mix-blend-mode: multiply;*/
+    opacity: 0.85;
 }
 
 .splash-content {
@@ -554,6 +575,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* NEW  */ object-position: top;
 }
 
 .collapsed-photo .halftone {
@@ -730,6 +752,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* NEW  */ object-position: top;
 }
 
 .expanded-photo .halftone {
@@ -758,11 +781,16 @@
 .expanded-special {
   padding: 16px;
   display: flex;
-  flex-direction: column;
+/*  flex-direction: column;*/
   align-items: center;
   gap: 8px;
   background: #f6f3f2;
   border-bottom: 2px solid #e5e2e1;
+
+  /*NEW*/
+  flex-direction: row;
+  justify-content: flex-start;
+  
 }
 
 .expanded-special-header {
@@ -801,7 +829,8 @@
 .expanded-special-value-box {
   background: #cea700;
   border: 3px solid #1c1b1b;
-  padding: 8px 24px;
+/*  padding: 8px 24px;*/
+  padding: 8px 8px;
   box-shadow: 3px 3px 0 0 rgba(0,0,0,1);
 }
 
@@ -898,20 +927,25 @@
    P03: ATRIBUTO
    ============================================ */
 
+#screen-atributo {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 80px); /* full height below header */
+}
+
 .atributo-layout {
   display: flex;
   gap: 24px;
   padding: 24px 32px 48px;
   max-width: 1400px;
   margin: 0 auto;
+  flex: 1;
 }
 
 .attr-column {
   flex: 1;
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-content: flex-start;
+  flex-direction: column;
 }
 
 .attr-column-title {
@@ -927,11 +961,35 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
-.attr-unshared .card-container {
-  opacity: 0.4;
+/* Cards container — fills remaining height, centers cards vertically */
+.attr-column-cards {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-content: center;
+  padding-top: 16px;
 }
+
+/* Aliados: cards aligned to the right */
+.attr-shared .attr-column-cards {
+  justify-content: flex-end;
+}
+
+/* Rivales: cards aligned to the left */
+.attr-unshared .attr-column-cards {
+  justify-content: flex-start;
+}
+
+/* Smaller cards in P03 (70% of original 240×380) */
+#screen-atributo .card-container {
+  zoom: 0.7;
+}
+
+/* Removed .attr-unshared .card-container opacity — handled via filter:invert in JS */
 
 /* Attr-specific collapsed card (shows current attr instead of power) */
 .collapsed-attr-value {
@@ -1193,3 +1251,4 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #5b403e;
 }
+
