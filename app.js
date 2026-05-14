@@ -852,7 +852,11 @@ function buildSlideshow(hero) {
   photoWrapper.id = 'slideshow-photo';
 
   if (hero.fotos && hero.fotos.length > 0) {
-    renderSlideshowPhoto(hero);
+    const url = hero.fotos[0];
+    photoWrapper.innerHTML = `
+      <img src="${url}" alt="${hero.nombre} - foto 1" style="width:100%;height:100%;object-fit:cover;">
+      <div class="halftone" style="position:absolute;inset:0;z-index:1;pointer-events:none"></div>
+    `;
   } else {
     photoWrapper.innerHTML = `
       <div class="slideshow-placeholder">
